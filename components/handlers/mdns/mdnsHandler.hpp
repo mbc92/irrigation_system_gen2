@@ -8,8 +8,8 @@ using namespace std;
 #define PROTOCOL "_tcp"
 
 class mdnsHandler {
-static constexpr string m_tag{"mdnsHandler"};
-static constexpr string m_masterLookup{"_master"};
+const string m_tag{"mdnsHandler"};
+const string m_masterLookup{"_master"};
 
 
 public:
