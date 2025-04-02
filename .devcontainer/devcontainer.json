@@ -21,6 +21,6 @@
 	"userEnvProbe": "loginInteractiveShell",
 	//Forward serial device to enable flash & monitor
 	"runArgs": [
-		"--device=/dev/tty0"
+		"--device=/dev/ttyUSB0"
 	]
 }
