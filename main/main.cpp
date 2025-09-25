@@ -14,7 +14,7 @@
 #include "sdkconfig.h"
 #include "esp_log.h"
 
-//httpHandler g_httpHandler(1234);
+httpHandler g_httpHandler(1234);
 mdnsHandler g_mdnsHandler;
 nvmHandler g_nvmHandler;
 wifiHandler g_wifiHandler;

@@ -1,5 +1,22 @@
 {
   "C_Cpp.intelliSenseEngine": "default",
   "idf.flashType": "UART",
-  "idf.adapterTargetName": "esp32"
+  "idf.adapterTargetName": "esp32",
+  "idf.port": "/dev/ttyUSB0",
+  "files.associations": {
+    "compare": "cpp",
+    "mutex": "cpp",
+    "array": "cpp",
+    "functional": "cpp",
+    "ratio": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp",
+    "algorithm": "c"
+  },
+  "idf.customExtraVars": {
+    "OPENOCD_SCRIPTS": "/home/chris/.espressif/tools/openocd-esp32/v0.12.0-esp32-20230419/openocd-esp32/share/openocd/scripts",
+    "ESP_ROM_ELF_DIR": "/home/chris/.espressif/tools/esp-rom-elfs/20230320/",
+    "IDF_TARGET": "esp32"
+  }
 }
