@@ -11,5 +11,4 @@ endif()
 
 # Add your submodule folder so it's treated as a component
 set(EXTRA_COMPONENT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/MCAL)
-
 project(irrigation_system_gen2)
