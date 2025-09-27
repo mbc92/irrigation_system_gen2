@@ -12,10 +12,10 @@
 */
 
 
-class wifiHandler
+class WifiService
 {
     public:
-        wifiHandler();
+        WifiService();
         esp_err_t connect();
         uint32_t getIpAddress();
         EventGroupHandle_t& getWifiEventGroup();
@@ -46,12 +46,12 @@ class wifiHandler
                             int32_t event_id, void* event_data);
 };
 
-inline EventGroupHandle_t& wifiHandler::getWifiEventGroup()
+inline EventGroupHandle_t& WifiService::getWifiEventGroup()
 {
     return _wifiEventGroup;
 }
 
-inline int& wifiHandler::getRetryCount()
+inline int& WifiService::getRetryCount()
 {
     return _retryNum;
 }

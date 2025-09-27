@@ -1,15 +1,19 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include <dioFactory.h>
+#include <mcalFactory.h>
+#include <wifiService.h>
 
 
 using namespace MCAL;
 
+WifiService wifiService;
+
 extern "C" void app_main(void)
 {
-   MCAL::Dio dio;
-   uint32_t channel{0u};
+    MCAL::Flash flash;
 
-   dio.ReadChannel(channel);
+    flash.Init();
+
+    wifiService.connect();
 }

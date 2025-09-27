@@ -1,10 +1,10 @@
 #include "wifiHandler.hpp"
 
 
-wifiHandler::wifiHandler(){};
+WifiService::WifiService(){};
 
 
-void wifiHandler::eventHandler(void* arg,esp_event_base_t event_base,
+void WifiService::eventHandler(void* arg,esp_event_base_t event_base,
                             int32_t event_id, void* event_data)
 {
     uint8_t retryNum{0u};
@@ -39,7 +39,7 @@ void wifiHandler::eventHandler(void* arg,esp_event_base_t event_base,
 }
 
 
-esp_err_t wifiHandler::connect()
+esp_err_t WifiService::connect()
 {
     esp_err_t tRetVal = ESP_OK;
 
@@ -56,12 +56,12 @@ esp_err_t wifiHandler::connect()
     esp_event_handler_instance_t instance_got_ip;
     ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
                                                         ESP_EVENT_ANY_ID,
-                                                        wifiHandler::eventHandler,
+                                                        WifiService::eventHandler,
                                                         this->m_wifiEventGroup,
                                                         &instance_any_id));
     ESP_ERROR_CHECK(esp_event_handler_instance_register(IP_EVENT,
                                                         IP_EVENT_STA_GOT_IP,
-                                                        wifiHandler::eventHandler,
+                                                        WifiService::eventHandler,
                                                         this->m_wifiEventGroup,
                                                         &instance_got_ip));
 

@@ -18,7 +18,7 @@
 #define WIFI_PASS "77470455588136770390"
 #define MAXIMUM_RETRY  5
 
-class wifiHandler{
+class WifiService{
     private:
     char m_ipAddr[40];
     const char *TAG = "WIFI HANDLER";
@@ -30,7 +30,7 @@ class wifiHandler{
     static void eventHandler(void* arg,esp_event_base_t event_base,
                             int32_t event_id, void* event_data);
     public:
-    wifiHandler();
+    WifiService();
     esp_err_t connect();
     uint32_t getIpAddress();
     EventGroupHandle_t& getWifiEventGroup();
@@ -38,12 +38,12 @@ class wifiHandler{
     void setIpAddr(esp_ip4_addr_t* ip);
 };
 
-inline EventGroupHandle_t& wifiHandler::getWifiEventGroup()
+inline EventGroupHandle_t& WifiService::getWifiEventGroup()
 {
     return m_wifiEventGroup;
 }
 
-inline int& wifiHandler::getRetryCount()
+inline int& WifiService::getRetryCount()
 {
     return m_retryNum;
 }
