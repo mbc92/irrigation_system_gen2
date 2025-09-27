@@ -12,7 +12,8 @@
     "tuple": "cpp",
     "type_traits": "cpp",
     "utility": "cpp",
-    "algorithm": "c"
+    "algorithm": "c",
+    "iostream": "cpp"
   },
   "idf.customExtraVars": {
     "OPENOCD_SCRIPTS": "/home/chris/.espressif/tools/openocd-esp32/v0.12.0-esp32-20230419/openocd-esp32/share/openocd/scripts",
