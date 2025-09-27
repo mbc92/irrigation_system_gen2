@@ -16,6 +16,7 @@ class WifiService
 {
     public:
         WifiService();
+        void init();
         esp_err_t connect();
         uint32_t getIpAddress();
         EventGroupHandle_t& getWifiEventGroup();

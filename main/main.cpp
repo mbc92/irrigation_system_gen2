@@ -13,7 +13,8 @@ extern "C" void app_main(void)
 {
     MCAL::Flash flash;
 
-    flash.Init();
+    flash.init();
 
+    wifiService.init();
     wifiService.connect();
 }

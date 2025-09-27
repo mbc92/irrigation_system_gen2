@@ -5,6 +5,10 @@ WifiService::WifiService()
 {
 };
 
+void WifiService::init()
+{
+    ESP_ERROR_CHECK(esp_netif_init());
+}
 
 void WifiService::eventHandler(void* arg,esp_event_base_t event_base,
                             int32_t event_id, void* event_data)
@@ -42,9 +46,7 @@ void WifiService::eventHandler(void* arg,esp_event_base_t event_base,
 
 
 esp_err_t WifiService::connect()
-{
-     ESP_ERROR_CHECK(esp_netif_init());
-     
+{ 
     _wifiEventGroup = xEventGroupCreate();
 
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -82,6 +84,7 @@ esp_err_t WifiService::connect()
             .sae_pwe_h2e = WPA3_SAE_PWE_BOTH,
         },
     };
+    ESP_LOGI(TAG, "Trying to connect to %s with pass %s", _wifiSSID, _wifiPass);
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
     ESP_ERROR_CHECK(esp_wifi_start() );
