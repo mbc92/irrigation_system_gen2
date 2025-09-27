@@ -4,4 +4,4 @@ idf_component_register(SRCS ${SOURCES}
                     REQUIRES MCAL)
 
 
-target_compile_definitions(${COMPONENT_LIB} PRIVATE BOARD_NAME="${BOARD}")
+target_compile_definitions(${COMPONENT_LIB} PUBLIC BOARD_NAME="${BOARD}")
