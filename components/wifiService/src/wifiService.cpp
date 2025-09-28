@@ -3,26 +3,32 @@
 
 WifiService::WifiService()
 {
+    ESP_LOGI("WifiService", "constructor");
+    ESP_ERROR_CHECK(esp_netif_init());
 };
 
-void WifiService::init()
+WifiService::~WifiService()
 {
-    ESP_ERROR_CHECK(esp_netif_init());
+     ESP_ERROR_CHECK(esp_netif_deinit());
 }
+
+static int retryNum = 0;
 
 void WifiService::eventHandler(void* arg,esp_event_base_t event_base,
                             int32_t event_id, void* event_data)
 {
-    uint8_t retryNum{0u};
 
     /* cast arguments to eventGroupHandle to set wifi event group bits*/
     EventGroupHandle_t wifiEventGroup = static_cast<EventGroupHandle_t>(arg);
 
     /* Check if we have wifi event STA start*/
-    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
+    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START)
+    {
         esp_wifi_connect();
-    /* Check if we have wifi event STA disconnected*/
-     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+        /* Check if we have wifi event STA disconnected*/
+     } 
+     else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) 
+     {
         if (retryNum < _maximumRetry) {
             esp_wifi_connect();
             retryNum++;
@@ -93,7 +99,7 @@ esp_err_t WifiService::connect()
     /* Waiting until either the connection is established (_wifiConnectedBit) or connection failed for the maximum
      * number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) */
     EventBits_t bits = xEventGroupWaitBits(_wifiEventGroup,
-            _wifiConnectedBit | _wifiFailBit,
+            BIT0 | BIT1,
             pdFALSE,
             pdFALSE,
             portMAX_DELAY);

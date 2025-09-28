@@ -16,7 +16,11 @@ class WifiService
 {
     public:
         WifiService();
-        void init();
+        ~WifiService();
+
+        WifiService(WifiService&&) = delete;
+        WifiService& operator=(WifiService&&) = delete;
+
         esp_err_t connect();
         uint32_t getIpAddress();
         EventGroupHandle_t& getWifiEventGroup();
@@ -31,8 +35,8 @@ class WifiService
         * - we are connected to the AP with an IP
         * - we failed to connect after the maximum amount of retries 
         */
-        static constexpr uint8_t _wifiConnectedBit{0x00000001};
-        static constexpr uint8_t _wifiFailBit{0x00000002};
+        static constexpr uint8_t _wifiConnectedBit{BIT0};
+        static constexpr uint8_t _wifiFailBit{BIT1};
         static constexpr uint8_t _maximumRetry{5u};
 
 

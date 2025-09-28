@@ -7,14 +7,12 @@
 
 using namespace MCAL;
 
-WifiService wifiService;
-
 extern "C" void app_main(void)
 {
     MCAL::Flash flash;
-
     flash.init();
 
-    wifiService.init();
+    WifiService wifiService;
+
     wifiService.connect();
 }
