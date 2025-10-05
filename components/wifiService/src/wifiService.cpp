@@ -7,10 +7,10 @@ WifiService::WifiService()
     ESP_ERROR_CHECK(esp_netif_init());
 };
 
-WifiService::~WifiService()
-{
-     ESP_ERROR_CHECK(esp_netif_deinit());
-}
+// WifiService::~WifiService()
+// {
+//      ESP_ERROR_CHECK(esp_netif_deinit());
+// }
 
 static int retryNum = 0;
 
@@ -22,27 +22,24 @@ void WifiService::eventHandler(void* arg,esp_event_base_t event_base,
     EventGroupHandle_t wifiEventGroup = static_cast<EventGroupHandle_t>(arg);
 
     /* Check if we have wifi event STA start*/
-    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START)
-    {
+    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
-        /* Check if we have wifi event STA disconnected*/
-     } 
-     else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) 
-     {
+    /* Check if we have wifi event STA disconnected*/
+     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
         if (retryNum < _maximumRetry) {
             esp_wifi_connect();
             retryNum++;
-            ESP_LOGI("WifiService", "retry to connect to the AP");
+            ESP_LOGI("wifiHandler", "retry to connect to the AP");
         } else {
             /* Set wifi event group */  
             xEventGroupSetBits(wifiEventGroup, _wifiFailBit);
         }
-        ESP_LOGI("WifiService","connect to the AP fail");
+        ESP_LOGI("wifiHandler","connect to the AP fail");
     /* Check if we have wifi event STA got IP*/  
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         /* Parse IP adres out of event data */  
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
-        ESP_LOGI("WifiService", "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
+        ESP_LOGI("wifiHandler", "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         retryNum = 0;
         /* Set wifi event group */  
         xEventGroupSetBits(wifiEventGroup, _wifiConnectedBit);
@@ -52,8 +49,10 @@ void WifiService::eventHandler(void* arg,esp_event_base_t event_base,
 
 
 esp_err_t WifiService::connect()
-{ 
-    _wifiEventGroup = xEventGroupCreate();
+{
+    esp_err_t tRetVal = ESP_OK;
+
+    this->_wifiEventGroup = xEventGroupCreate();
 
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     esp_netif_create_default_wifi_sta();
@@ -77,8 +76,9 @@ esp_err_t WifiService::connect()
 
     wifi_config_t wifi_config = {
         .sta = {
-            .ssid = *_wifiSSID,
-            .password = *_wifiPass,
+            .ssid = WIFI_SSID,
+            .password = WIFI_PASS
+            ,
             /* Authmode threshold resets to WPA2 as default if password matches WPA2 standards (pasword len => 8).
              * If you want to connect the device to deprecated WEP/WPA networks, Please set the threshold value
              * to WIFI_AUTH_WEP/WIFI_AUTH_WPA_PSK and set the password with length and format matching to
@@ -90,16 +90,15 @@ esp_err_t WifiService::connect()
             .sae_pwe_h2e = WPA3_SAE_PWE_BOTH,
         },
     };
-    ESP_LOGI(TAG, "Trying to connect to %s with pass %s", _wifiSSID, _wifiPass);
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
     ESP_ERROR_CHECK(esp_wifi_start() );
     ESP_LOGI(TAG, "wifi_init finished and running on core: %d", xPortGetCoreID());
 
-    /* Waiting until either the connection is established (_wifiConnectedBit) or connection failed for the maximum
+    /* Waiting until either the connection is established (WIFI_CONNECTED_BIT) or connection failed for the maximum
      * number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) */
-    EventBits_t bits = xEventGroupWaitBits(_wifiEventGroup,
-            BIT0 | BIT1,
+    EventBits_t bits = xEventGroupWaitBits(this->_wifiEventGroup,
+            _wifiConnectedBit | _wifiFailBit,
             pdFALSE,
             pdFALSE,
             portMAX_DELAY);
@@ -108,14 +107,14 @@ esp_err_t WifiService::connect()
      * happened. */
     if (bits & _wifiConnectedBit) {
         ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
-                 _wifiSSID, _wifiPass);
+                 WIFI_SSID, WIFI_PASS);
     } else if (bits & _wifiFailBit) {
         ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
-                 _wifiSSID, _wifiPass);
-        return ESP_FAIL;
+                 WIFI_SSID, WIFI_PASS);
+        tRetVal = ESP_FAIL;
     } else {
         ESP_LOGE(TAG, "UNEXPECTED EVENT");
     }
 
-    return ESP_OK;
+    return tRetVal;
 }
